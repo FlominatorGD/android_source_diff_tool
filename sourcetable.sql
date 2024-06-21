@@ -7,49 +7,65 @@ CREATE DATABASE sourcetable;
 -- Use sourcetable
 USE sourcetable;
 
--- Create Source table
+-- [Source] --(contains)----< [Folder]
+--   |                        |
+--   |                        |
+--   >---------------------<  |
+--   |                        |
+--   |                        |
+--[Folder] --(contains)----< [File]
+--   |                        |
+--   |                        |
+--   >---------------------<  |
+--   |                        |
+--   |                        |
+--[File] --(contains)----< [Row/Column]
+--   |                        |
+--   |                        |
+--   >---------------------<  |
+--   |                        |
+--   |                        |
+--[Row/Column] --(contains)----< [Character]
+
+-- Create table for Source
 CREATE TABLE Source_t (
-    SourceID INT PRIMARY KEY,
-    Name VARCHAR(255) UNIQUE
+    SourceID INT AUTO_INCREMENT PRIMARY KEY,
+    Name VARCHAR(255) NOT NULL UNIQUE
 );
 
--- Create Folder table
+-- Create table for Folder
 CREATE TABLE Folder_t (
-    FolderID INT PRIMARY KEY,
-    Name VARCHAR(255) UNIQUE,
+    FolderID INT AUTO_INCREMENT PRIMARY KEY,
     SourceID INT,
-    FOREIGN KEY (SourceID) REFERENCES Source_t(SourceID)
+    Name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (SourceID) REFERENCES Source_t(SourceID),
+    UNIQUE (SourceID, Name) -- Name of the folder must be unique within a source
 );
 
--- Create File table
+-- Create table for File
 CREATE TABLE File_t (
-    FileID INT PRIMARY KEY,
-    Name VARCHAR(255) UNIQUE,
-    Type VARCHAR(50),
+    FileID INT AUTO_INCREMENT PRIMARY KEY,
     FolderID INT,
-    FOREIGN KEY (FolderID) REFERENCES Folder_t(FolderID)
+    Name VARCHAR(255) NOT NULL,
+    FOREIGN KEY (FolderID) REFERENCES Folder_t(FolderID),
+    UNIQUE (FolderID, Name) -- Name of the file must be unique within a folder
 );
 
--- Create Line table
-CREATE TABLE Line_t (
-    LineID INT PRIMARY KEY,
-    Name VARCHAR(255) UNIQUE,
+-- Create table for Row/Column
+CREATE TABLE Row_Column_t (
+    RowColumnID INT AUTO_INCREMENT PRIMARY KEY,
     FileID INT,
-    FOREIGN KEY (FileID) REFERENCES File_t(FileID)
+    Number INT NOT NULL, -- Row or column number
+    FOREIGN KEY (FileID) REFERENCES File_t(FileID),
+    UNIQUE (FileID, Number) -- Number must be unique within a file
 );
 
--- Create Colum table
-CREATE TABLE Column_t (
-    ColumnID INT PRIMARY KEY,
-    Name VARCHAR(255) UNIQUE,
-    LineID INT,
-    FOREIGN KEY (LineID) REFERENCES Line_t(LineID)
-);
-
--- Create Character table
+-- Create table for Character
 CREATE TABLE Character_t (
-    CharacterID INT PRIMARY KEY,
-    Value CHAR(1),
-    LineID INT,
-    FOREIGN KEY (LineID) REFERENCES Line_t(LineID)
+    CharacterID INT AUTO_INCREMENT PRIMARY KEY,
+    RowColumnID INT,
+    CharacterPosition INT NOT NULL,
+    CharacterValue CHAR(1) NOT NULL,
+    FOREIGN KEY (RowColumnID) REFERENCES Row_Column_t(RowColumnID),
+    UNIQUE (RowColumnID, CharacterPosition), -- Character position must be unique within a row/column
 );
