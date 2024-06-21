@@ -67,5 +67,5 @@ CREATE TABLE Character_t (
     CharacterPosition INT NOT NULL,
     CharacterValue CHAR(1) NOT NULL,
     FOREIGN KEY (RowColumnID) REFERENCES Row_Column_t(RowColumnID),
-    UNIQUE (RowColumnID, CharacterPosition), -- Character position must be unique within a row/column
+    UNIQUE (RowColumnID, CharacterPosition) -- Character position must be unique within a row/column
 );
