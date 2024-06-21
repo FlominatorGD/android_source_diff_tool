@@ -13,19 +13,19 @@ USE sourcetable;
 --   >---------------------<  |
 --   |                        |
 --   |                        |
---[Folder] --(contains)----< [File]
+-- [Folder] --(contains)----< [File]
 --   |                        |
 --   |                        |
 --   >---------------------<  |
 --   |                        |
 --   |                        |
---[File] --(contains)----< [Row/Column]
+-- [File] --(contains)----< [Row/Column]
 --   |                        |
 --   |                        |
 --   >---------------------<  |
 --   |                        |
 --   |                        |
---[Row/Column] --(contains)----< [Character]
+-- [Row/Column] --(contains)----< [Character]
 
 -- Create table for Source
 CREATE TABLE Source_t (
